@@ -7,6 +7,7 @@
     <!-- Include CodeMirror CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.10/codemirror.min.css">
     <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Background grid pattern with darker lines */
@@ -14,15 +15,15 @@
             font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #070707; /* Very dark background */
+            background-color: #070707;
             background-image: linear-gradient(#111 1px, transparent 1px), linear-gradient(90deg, #111 1px, transparent 1px);
-            background-size: 40px 40px; /* Smaller grid */
+            background-size: 30px 30px;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full height for centering */
-            overflow: hidden; /* Prevents scrolling */
+            height: 100vh;
+            overflow: hidden;
         }
 
         h1, p {
@@ -33,39 +34,32 @@
         .container {
             width: 90%;
             max-width: 600px;
-            background-color: #141414; /* Dark panel background */
+            background-color: #141414;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Subtle shadow */
-            border: 1px solid #646464; /* Small white outline */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            border: 1px solid #646464;
             position: relative;
         }
 
         .CodeMirror {
             height: 400px;
             border: 1px solid #555;
-            font-family: Consolas, "Courier New", monospace;
+            font-family: 'Fira Mono', Consolas, "Courier New", monospace;
             font-size: 14px;
             border-radius: 10px;
-            background-color: #1E1E1E; /* Match with the container's dark background */
-            overflow-x: auto; /* Enable horizontal scrolling */
-            color: white; /* Ensure text is white */
+            background-color: #1E1E1E;
+            overflow-x: auto;
+            color: white;
         }
 
-        /* Custom syntax colors similar to Roblox Studio */
-        .cm-s-robloxstudio .cm-keyword { color: #569CD6; }
-        .cm-s-robloxstudio .cm-string { color: #D69D85; }
-        .cm-s-robloxstudio .cm-comment { color: #6A9955; }
-        .cm-s-robloxstudio .cm-number { color: #B5CEA8; }
-        .cm-s-robloxstudio .cm-builtin { color: #4EC9B0; }
+        .cm-s-robloxstudio .cm-keyword { color: #f86d7c; }
+        .cm-s-robloxstudio .cm-string { color: #adf195; }
+        .cm-s-robloxstudio .cm-comment { color: #666666; }
+        .cm-s-robloxstudio .cm-number { color: #ffc600; }
+        .cm-s-robloxstudio .cm-builtin { color: #84d6f7; }
         .cm-s-robloxstudio .cm-operator { color: #D4D4D4; }
 
-        .cm-s-robloxstudio {
-            background-color: #1E1E1E;
-            color: #D4D4D4;
-        }
-
-        /* Lighter gray for line numbers */
         .CodeMirror-gutter {
             background-color: #2C2C2C;
             color: #B0B0B0;
@@ -76,9 +70,9 @@
         }
 
         .compile-btn {
-            width: 100%; /* Full width */
+            width: 100%;
             padding: 10px;
-            background-color: #007ACC;
+            background-color: #128fe3;
             color: white;
             border: none;
             border-radius: 8px;
@@ -86,110 +80,90 @@
             font-size: 16px;
             text-align: center;
             transition: background-color 0.3s;
-            box-shadow: 0 0 10px rgba(0, 122, 204, 0.7); /* Subtle glow effect */
+            box-shadow: 0 0 10px rgba(0, 122, 204, 0.7);
         }
 
         .compile-btn:hover {
-            background-color: #005F9E;
+            background-color: #2187cc;
         }
 
-        .input-panel {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background-color: #282828;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid white; /* Add a white border to the input panel */
+        .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000; /* Increase z-index to ensure it overlays everything */
+}
+
+.popup {
+    width: 90%;
+    max-width: 600px;
+    background-color: #141414;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border: 1px solid #646464;
+    position: relative;
+    z-index: 2001; /* Slightly above the overlay */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: #D4D4D4;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 2002; /* Ensure it's above the popup content */
+}
+
+        .close-btn:hover {
+            color: #FF4C4C;
         }
 
-        .input-panel input {
-            background-color: #111;
-            color: white;
-            padding: 10px;
-            border: 1px solid #333;
-            border-radius: 6px;
-            flex-grow: 1;
-            margin-right: 10px;
-        }
-
-        .input-panel button {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .input-panel button:hover {
-            background-color: #444;
-        }
-
-        /* Keybinds panel styles */
         .keybinds {
             position: absolute;
-            bottom: 20px; /* Distance from the bottom */
-            left: 20px; /* Distance from the left */
-            background-color: rgba(30, 30, 30, 0.8); /* Semi-transparent background */
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(30, 30, 30, 0.8);
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             color: #D4D4D4;
             font-size: 14px;
-            max-width: 200px; /* Set a max width */
+            max-width: 200px;
         }
 
         .keybinds h2 {
-            font-size: 16px; /* Title size */
-            margin: 0 0 5px; /* Spacing */
-            text-align: center; /* Center the title */
-            position: relative; /* Position for absolute close button */
+            font-size: 16px;
+            margin: 0 0 5px;
+            text-align: center;
         }
 
         .keybinds ul {
-            list-style-type: none; /* Remove default list style */
-            padding: 0; /* Remove padding */
-            margin: 0; /* Remove margin */
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
 
         .keybinds li {
-            margin: 5px 0; /* Space between items */
+            margin: 5px 0;
         }
 
-        /* Close button styles */
-        .close-btn {
-            position: absolute;
-            top: -5px; /* Slightly higher */
-            right: -5px; /* Slightly to the right */
-            background-color: transparent;
-            color: #D4D4D4;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 10px; /* Increased padding for a larger hitbox */
-            border-radius: 50%; /* Make it circular for a better look */
-        }
-
-        .close-btn:hover {
-            color: #FF4C4C; /* Change color on hover */
-        }
-
-        /* Highlight current line */
-        .cm-s-robloxstudio .CodeMirror-selected {
-            background-color: blue !important; /* Change the selection color to blue */
-            color: white !important; /* Ensure text color is white when selected */
-        }
-
-        /* Current line highlighting */
         .cm-s-robloxstudio .selected { 
-            background-color: rgba(255, 255, 255, 0.1) !important; /* Light gray for the current line */
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
 
-        /* Typing indicator color */
         .CodeMirror-cursor {
-            border-left: 1px solid white; /* Change typing indicator color to white */
+            border-left: 1px solid white;
         }
     </style>
 </head>
@@ -199,13 +173,19 @@
         <h1>Lua2Powerlang</h1>
         <p>Converts luau code to powerlang code</p>
 
-        <button class="compile-btn">Convert to Powerlang</button>
+        <button class="compile-btn" id="convertButton">Convert to Powerlang</button>
 
         <div class="code-container">
             <textarea id="luaEditor"></textarea>
         </div>
 
-        <!-- Keybinds List -->
+        <div class="popup-overlay" id="popupOverlay">
+            <div class="popup">
+                <button class="close-btn" id="closePopup">&times;</button>
+                <textarea id="powerlangViewer"></textarea>
+            </div>
+        </div>
+
         <div class="keybinds" id="keybinds">
             <button class="close-btn" id="closeKeybinds">&times;</button>
             <h2>Keybinds</h2>
@@ -231,27 +211,56 @@
             indentUnit: 4,
             smartIndent: true,
             matchBrackets: true,
-            lineWrapping: false // Disable line wrapping for horizontal scrolling
+            lineWrapping: false
         });
+        
+        editor.setValue('print("Hello World")');
 
-        // Function to highlight the current line
-        function highlightCurrentLine() {
-            var line = editor.getCursor().line;
-            editor.eachLine(function(lineHandle) {
-                editor.removeLineClass(lineHandle, 'background', 'selected'); // Remove previous highlight
-            });
-            editor.addLineClass(line, 'background', 'selected'); // Highlight current line
-        }
-
-        editor.on('cursorActivity', highlightCurrentLine);
-        highlightCurrentLine(); // Initial highlight
-
-        // Close keybinds panel
+        var popupOverlay = document.getElementById("popupOverlay");
+        var powerlangViewer;
+        
         document.getElementById('closeKeybinds').addEventListener('click', function() {
-            var keybinds = document.getElementById('keybinds');
-            keybinds.style.display = 'none'; // Hide the keybinds panel
+            document.getElementById('keybinds').style.display = 'none';
         });
-    </script>
 
+        // Show Powerlang popup and initialize non-editable CodeMirror
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const luaCode = editor.getValue();
+            const powerlangCode = ReplaceLuaSyntax(luaCode);
+            popupOverlay.style.display = "flex";
+
+            // Initialize non-editable CodeMirror instance for Powerlang display if not already
+            if (!powerlangViewer) {
+                powerlangViewer = CodeMirror.fromTextArea(document.getElementById("powerlangViewer"), {
+                    mode: "lua",
+                    theme: "robloxstudio",
+                    lineNumbers: true,
+                    readOnly: "true",
+                    lineWrapping: false
+                });
+            }
+            powerlangViewer.setValue(powerlangCode);
+        });
+
+        // Close popup
+        document.getElementById('closePopup').addEventListener('click', function() {
+            popupOverlay.style.display = "none";
+        });
+
+        // ReplaceLuaSyntax function in JavaScript
+        function ReplaceLuaSyntax(content) {
+            const connectionVar = "eventConnection";
+            
+            // Syntax transformations to Powerlang format
+            content = content.replace(/\bthen\b/g, "{");
+            content = content.replace(/\bend\b/g, "}");
+            content = content.replace(/\bdo\b/g, "{");
+            content = content.replace(/function\s+([\w_]+)\s*\((.*?)\)/g, "function $1($2) {");
+            content = content.replace(/([\w\.]+):Connect\s*\((.*?)\)/g, (match, eventName, params) => 
+                `event ${eventName}(${params.replace("function(", "")}, ${connectionVar}) {`);
+            
+            return content;
+        }
+    </script>
 </body>
 </html>
